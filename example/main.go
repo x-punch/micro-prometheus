@@ -1,14 +1,24 @@
 package main
 
 import (
-	"github.com/micro/go-micro/v2"
-	prometheus "github.com/x-punch/micro-prometheus/v2"
+	"github.com/asim/go-micro/v3"
+	prometheus "github.com/x-punch/micro-prometheus/v3"
 )
 
 func main() {
 	service := micro.NewService(micro.Name("go.micro.prom.testing"), micro.Version("0.0.0"))
-	prom := prometheus.NewPrometheus(prometheus.ServiceID(service.Server().Options().Id), prometheus.ServiceName(service.Name()), prometheus.ServiceVersion(service.Server().Options().Version), prometheus.ListenAddress(":3000"))
-	service.Init(micro.WrapHandler(prom.NewHandlerWrapper()), micro.WrapSubscriber(prom.NewSubscriberWrapper()))
+	promOpts := []prometheus.Option{
+		prometheus.ServiceID(service.Server().Options().Id),
+		prometheus.ServiceName(service.Name()),
+		prometheus.ServiceVersion(service.Server().Options().Version),
+		prometheus.ListenAddress(":3000"),
+	}
+	prom := prometheus.NewPrometheus(promOpts...)
+	microOpts := []micro.Option{
+		micro.WrapHandler(prom.NewHandlerWrapper()),
+		micro.WrapSubscriber(prom.NewSubscriberWrapper()),
+	}
+	service.Init(microOpts...)
 	if err := service.Run(); err != nil {
 		panic(err)
 	}

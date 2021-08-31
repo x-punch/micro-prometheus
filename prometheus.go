@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/micro/go-micro/v2/client"
-	log "github.com/micro/go-micro/v2/logger"
-	"github.com/micro/go-micro/v2/server"
+	"github.com/asim/go-micro/v3/client"
+	"github.com/asim/go-micro/v3/logger"
+	"github.com/asim/go-micro/v3/server"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -55,7 +55,7 @@ func NewPrometheus(opts ...Option) Prometheus {
 	go func() {
 		http.Handle(p.opts.MetricsPath, promhttp.Handler())
 		if err := http.ListenAndServe(p.opts.ListenAddress, nil); err != nil {
-			log.Error(err)
+			logger.Error(err)
 		}
 	}()
 	return p

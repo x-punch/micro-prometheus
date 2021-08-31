@@ -1,7 +1,7 @@
 package prometheus
 
 import (
-	log "github.com/micro/go-micro/v2/logger"
+	"github.com/asim/go-micro/v3/logger"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -69,7 +69,7 @@ func (p *plugin) registerMetrics() {
 
 	for _, collector := range []prometheus.Collector{p.uptime, p.callCnt, p.callDur, p.streamCnt, p.streamDur, p.publishCnt, p.publishDur, p.handleCnt, p.handleDur, p.subscribeCnt, p.subscribeDur} {
 		if err := prometheus.DefaultRegisterer.Register(collector); err != nil {
-			log.Error(err)
+			logger.Error(err)
 		}
 	}
 }
